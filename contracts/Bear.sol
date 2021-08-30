@@ -21,6 +21,7 @@ contract Bear is Ownable, ERC721 {
     
     constructor() ERC721("Polar Pals", "PALS") {
         // mintBatch('test', 2, MAX_GIVE_AWAY);
+        setBaseURI('ipfs://');
     }
     function startPreSale() public onlyOwner {
             PRE_SALE_ON = true;
@@ -38,14 +39,13 @@ contract Bear is Ownable, ERC721 {
         _mutableIPFSBucket = mutableIPFSBucket_;
     }
 
-
-
     function getCurrentNFTAmount() public  returns (uint256){
         return MAX_NFTS;
     }
     function getPreSaleNFTAmount() public   returns (uint256){
         return PRE_SALE;
     }
+    
     function setBaseURI(string memory baseURI) public onlyOwner {
         _currentBaseURI = baseURI;
         _setBaseURI(_currentBaseURI);
@@ -57,6 +57,7 @@ contract Bear is Ownable, ERC721 {
        _tokenIds = _tokenIds + 1;
        uint256 newItemId = _tokenIds;
        _safeMint(msg.sender, newItemId);
+       
        _setTokenURI(newItemId, tokenURI );
         if(PRE_SALE_ON){
              PRE_SALE = PRE_SALE -1 ;
@@ -75,7 +76,7 @@ contract Bear is Ownable, ERC721 {
         payable(owner()).transfer(0.069 ether);
         return id;
     }
-    function claim_2( bytes32[2][] memory tokenURI) external payable returns (uint256[] memory){
+    function claim_2( string memory tokenURI) external payable returns (uint256[] memory){
         require(MAX_NFTS > 0);
         require(msg.value == 0.138 ether, "claiming 0.138 ether");
           if(PRE_SALE_ON){
@@ -86,7 +87,7 @@ contract Bear is Ownable, ERC721 {
         payable(owner()).transfer(0.138 ether);
         return id;
     }
-    function claim_5( bytes32[5][] memory tokenURI) external payable returns (uint256[] memory){
+    function claim_5( string memory tokenURI) external payable returns (uint256[] memory){
         require(MAX_NFTS > 0);
         require(msg.value == 0.345 ether, "claiming 0.345 ether");
           if(PRE_SALE_ON){
@@ -97,7 +98,7 @@ contract Bear is Ownable, ERC721 {
         payable(owner()).transfer(0.345 ether);
         return id;
     }
-    function claim_10(bytes32[10][] memory tokenURI) external payable returns (uint256[] memory){
+    function claim_10(string memory tokenURI) external payable returns (uint256[] memory){
         require(MAX_NFTS > 0);
         require(msg.value == 0.69 ether, "claiming 0.69 ether");
           if(PRE_SALE_ON){
@@ -108,7 +109,7 @@ contract Bear is Ownable, ERC721 {
         payable(owner()).transfer(0.69 ether);
         return id;
     }
-    function claim_20(bytes32[20][] memory tokenURI) external payable returns (uint256[] memory){
+    function claim_20(string memory tokenURI) external payable returns (uint256[] memory){
         require(MAX_NFTS > 0);
         require(msg.value == 1.38 ether, "claiming 0.20 ether");
         require(PRE_SALE_ON == false);
@@ -117,22 +118,21 @@ contract Bear is Ownable, ERC721 {
         payable(owner()).transfer(1.38  ether);
         return id;
     }
-    function claim_10_GiveAway(bytes32[10][] memory tokenURI) onlyOwner external returns (uint256[] memory){
+    function claim_10_GiveAway(string memory tokenURI) onlyOwner external returns (uint256[] memory){
         require(MAX_NFTS > 0);
         uint256 rarity = 2; // This should generated based on the probablity map 
         uint256[] memory id = mintBatch(tokenURI,rarity,10);
         return id;
     }
-    function mintBatch( bytes32[][] memory tokenURI,uint256 rarity,uint256 numberOfTokens) private returns (uint256[] memory){
+    function mintBatch( string memory tokenURI,uint256 rarity,uint256 numberOfTokens) private returns (uint256[] memory){
         uint256[] memory NFT_ID_ARRAY = new uint256[](numberOfTokens);
         for(uint temp = 0; temp < numberOfTokens; temp++) {
-             string memory URI = bytes32ToString(tokenURI[numberOfTokens][temp]);
-             uint256 id = mintNFT(URI,rarity);
+             uint256 id = mintNFT(tokenURI,rarity);
              NFT_ID_ARRAY[temp] = id;   
         }
         return NFT_ID_ARRAY;
     }
-function bytes32ToString(bytes32 _bytes32) internal pure returns (string memory) {
+    function bytes32ToString(bytes32 _bytes32) internal pure returns (string memory) {
         uint8 i = 0;
         while(i < 32 && _bytes32[i] != 0) {
             i++;
@@ -143,4 +143,8 @@ function bytes32ToString(bytes32 _bytes32) internal pure returns (string memory)
         }
         return string(bytesArray);
     }
+
+    
+
+
 }
