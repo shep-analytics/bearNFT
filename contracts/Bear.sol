@@ -12,7 +12,7 @@ contract Bear is Ownable, ERC721 {
     uint256 private _tokenIds = 0;
     uint256 private MAX_GIVE_AWAY = 120;
     uint256 private PRE_SALE = 1000;
-    uint256 private MAX_NFTS =10000;
+    uint256 private MAX_NFTS =9000;
     bool private PRE_SALE_ON;
 
 
@@ -53,12 +53,18 @@ contract Bear is Ownable, ERC721 {
     function _baseURI() public view virtual  returns (string memory) {
         return _currentBaseURI;
     }
+
+    function  setTokenURI(uint256 newItemId,string memory tokenURI ) external onlyOwner {
+        // require(exists(tokenURI));
+        _setTokenURI(newItemId, tokenURI);
+    }
+
+
+
     function mintNFT(string memory tokenURI, uint256 rarity) internal returns (uint256) {
        _tokenIds = _tokenIds + 1;
        uint256 newItemId = _tokenIds;
        _safeMint(msg.sender, newItemId);
-       
-       _setTokenURI(newItemId, tokenURI );
         if(PRE_SALE_ON){
              PRE_SALE = PRE_SALE -1 ;
         }
